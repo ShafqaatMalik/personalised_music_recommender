@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Streamlit secrets
+.secrets.toml
+.streamlit/secrets.toml
+
+# Spotify token cache
+.spotify_cache
+
+# VS Code settings
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
