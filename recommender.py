@@ -5,6 +5,7 @@ import streamlit as st
 import altair as alt
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+from core.recommend import build_user_profile, recommend_custom
 
 
 ############################################################
@@ -142,83 +143,7 @@ def get_artist_info(sp, artist_ids):
 # Recommendation Engine
 # Functions to build user profile and recommend tracks based on similarity.
 ############################################################
-def build_user_profile(recent_tracks, artist_df):
-    """
-    Create a user profile based on track and artist popularity.
-
-    Args:
-        recent_tracks (list[dict]): List of track metadata.
-        artist_df (pd.DataFrame): DataFrame of artist details.
-
-    Returns:
-        np.ndarray: Array of average track and artist popularity.
-    """
-    track_pops = [t["popularity"] for t in recent_tracks]
-    avg_artist_pops = []
-
-    for track in recent_tracks:
-        pops = [
-            artist_df.loc[artist_df["id"] == aid, "popularity"].values[0]
-            for aid in track["artist_ids"]
-            if aid in artist_df["id"].values
-        ]
-        avg_artist_pops.append(np.mean(pops) if pops else 0)
-
-    return np.array([np.mean(track_pops), np.mean(avg_artist_pops)])
-
-
-def recommend_custom(user_profile, recent_tracks, artist_df, top_n=10, min_popularity=0):
-    """
-    Recommend tracks based on similarity to user profile.
-
-    Args:
-        user_profile (np.ndarray): User profile features.
-        recent_tracks (list[dict]): List of track metadata.
-        artist_df (pd.DataFrame): DataFrame of artist details.
-        top_n (int): Number of recommendations to return.
-        min_popularity (int): Minimum average artist popularity.
-
-    Returns:
-        list[dict]: List of recommended track dictionaries.
-    """
-    recommendations = []
-    seen_ids = set()
-    scored_tracks = []
-
-    # Compute similarity scores for each track based on user profile
-    for track in recent_tracks:
-        track_pop = track["popularity"]
-        artist_pops = [
-            artist_df.loc[artist_df["id"] == aid, "popularity"].values[0]
-            for aid in track["artist_ids"]
-            if aid in artist_df["id"].values
-        ]
-        avg_artist_pop = np.mean(artist_pops) if artist_pops else 0
-        track_vector = np.array([track_pop, avg_artist_pop])
-        sim = 1 - np.linalg.norm(user_profile - track_vector)
-        scored_tracks.append((track, sim, avg_artist_pop))
-
-    # Sort tracks by similarity score (descending)
-    scored_tracks.sort(key=lambda x: x[1], reverse=True)
-
-    # Build recommendations list, filtering by minimum artist popularity and uniqueness
-    for track, score, avg_artist_pop in scored_tracks:
-        if avg_artist_pop < min_popularity:
-            continue
-        if track["id"] not in seen_ids:
-            recommendations.append(
-                {
-                    "name": track["name"],
-                    "artist": ", ".join(track["artist_names"]),
-                    "album_img": track["album_img"],
-                    "preview_url": track["preview_url"],
-                }
-            )
-            seen_ids.add(track["id"])
-        if len(recommendations) == top_n:
-            break
-
-    return recommendations
+# build_user_profile and recommend_custom are now imported from core.recommend
 
 
 ############################################################
