@@ -1,13 +1,14 @@
 
-# Spotify Music Recommender
+# Personalised Music Recommender
 
-A personalized music recommender dashboard built with Streamlit and Spotify API.
+The Spotify Music Recommender is an interactive web application that connects to your Spotify account and delivers personalized track recommendations based on your recent listening history. Built with Streamlit and powered by the Spotify Web API (via Spotipy), the app analyzes track and artist popularity metrics to create a simple user profile, then ranks songs that best match your preferences. Its clean and responsive interface includes customizable sliders for recommendation tuning and an Altair-powered bubble chart for visualizing artist popularity.
 
 ## Features
-- Connects to your Spotify account
-- Analyzes recent listening history
-- Visualizes artist popularity
-- Recommends tracks based on your profile
+- Log in securely with your Spotify account.
+- Fetch your 50 most recently played songs.
+- Bubble chart showing popularity of your favorite artists.
+- Suggests tracks based on similarity to your recent listening profile.
+- Styled dashboard with album covers, previews, and artist info.
 
 ## Setup
 1. Install dependencies:
